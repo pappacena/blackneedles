@@ -6,18 +6,21 @@ authors = ["Thiago F Pappacena <pappacena@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10,<3.12"
+# Note: snowflake-snowpark-python requires <3.12. Fix this once they support 3.12
+python = "^3.8,<3.12"
 typer = "^0.11.0"
 snowflake-connector-python = "^3.7.1"
 snowflake-snowpark-python = "^1.14.0"
 pydantic = "^2.6.4"
-ipython = "^8.22.2"
+ipython = "^8.0.0"
 rich = "^13.7.1"
 
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"
 pytest = "^8.1.1"
+pre-commit = "^3.0.0"
+mypy = "^1.9.0"
 
 [build-system]
 requires = ["poetry-core"]

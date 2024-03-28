@@ -47,11 +47,12 @@ class Service(BaseModel):
 
     @cached_property
     def status(self) -> str:
-        result = Database.get_instance().get_rows(
-            "CALL __blackneedles__.check_statuS(?)",
-            (self.full_path,)
+        result = next(
+            Database.get_instance().get_rows(
+                "CALL __blackneedles__.check_statuS(?)", (self.full_path,)
+            )
         )
-        return json.loads(result[0].CHECK_STATUS)[0]["status"]
+        return json.loads(result.CHECK_STATUS)[0]["status"]
 
     def alter_status(self, status: str) -> None:
         status = status.upper()
@@ -61,8 +62,7 @@ class Service(BaseModel):
                 f"Invalid status: {status}. Should be one of {valid_status}"
             )
         Database.get_instance().get_rows(
-            "CALL __blackneedles__.alter_service(?, ?)",
-            (self.full_path, status)
+            "CALL __blackneedles__.alter_service(?, ?)", (self.full_path, status)
         )
 
     class objects:
@@ -73,7 +73,7 @@ class Service(BaseModel):
                 db.query(
                     Service,
                     "CALL __blackneedles__.describe_service(?);",
-                    (service_name, )
+                    (service_name,),
                 )
             )
 
@@ -97,7 +97,7 @@ class Service(BaseModel):
             return db.query(
                 Service,
                 "CALL __blackneedles__.list_services(?)",
-                (db.config["database"],)
+                (db.config["database"],),
             )
 
         @classmethod
