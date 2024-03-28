@@ -11,10 +11,10 @@ app = typer.Typer()
 def list_all_services(
     ctx: typer.Context,
     schema: Annotated[
-        str, typer.Option(help="The schema to list services from")
+        str | None, typer.Option(help="The schema to list services from")
     ] = None,
     compute_pool: Annotated[
-        str,
+        str | None,
         typer.Option("--compute-pool", help="The compute pool to list services from"),
     ] = None,
 ):

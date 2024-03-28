@@ -1,6 +1,6 @@
 import configparser
 import os
-from typing import Any, Iterator, Sequence, Type
+from typing import Any, Iterator, Sequence, Type, TypeVar
 
 from pydantic import BaseModel
 from snowflake.snowpark.row import Row
@@ -8,6 +8,8 @@ from snowflake.snowpark import Session
 from threading import local
 
 threadlocal_data = local()
+
+AnyModel = TypeVar("AnyModel", bound=BaseModel)
 
 
 class Database:
@@ -43,9 +45,9 @@ class Database:
 
     def query(
         self,
-        model: Type[BaseModel],
+        model: Type[AnyModel],
         sql: str,
         params: Sequence[Any] | None = None,
-    ) -> Iterator[BaseModel]:
+    ) -> Iterator[AnyModel]:
         for row in self.session.sql(sql, params).collect():
             yield model.model_validate(row.as_dict())

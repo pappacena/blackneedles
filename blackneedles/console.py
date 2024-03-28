@@ -1,16 +1,17 @@
-from typing import List
-from pydantic import BaseModel
+from typing import Callable, List
 import typer
 
 from rich.console import Console
 from rich.progress import Progress
 from rich.table import Table
 
+from blackneedles.connection import AnyModel
+
 
 def print_table(
     ctx: typer.Context,
-    data: List[BaseModel],
-    attributes: List[str],
+    data: List[AnyModel],
+    attributes: List[str | Callable[[AnyModel], str]],
     headers: List[str],
     title: str | None = None,
 ) -> None:

@@ -37,4 +37,6 @@ def global_options(
         return
     if table_style not in ("rich", "plain"):
         raise typer.BadParameter("table-style must be either 'rich' or 'plain'")
-    ctx.obj = GlobalParams(table_style=table_style)
+    ctx.obj = GlobalParams(
+        table_style=table_style,  # type: ignore
+    )

@@ -42,7 +42,7 @@ jobs:
         poetry run ruff format --check --diff .
     - name: Type Checking
       run: |
-        poetry run mypy landingai
+        poetry run mypy blackneedles
     - name: Test with pytest
       run: |
         poetry run pytest -v tests
