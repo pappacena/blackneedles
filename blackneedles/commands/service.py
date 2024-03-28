@@ -58,7 +58,6 @@ def describe_service(
     service_names: Annotated[list[str], typer.Argument(..., help="The name of the service to describe")],
 ):
     services = [Service.objects.get(name) for name in service_names]
-
     print_table(
         ctx,
         services,
@@ -76,3 +75,13 @@ def describe_service(
         ],
     )
 
+
+@app.command("alter")
+def alter_status(
+    ctx: typer.Context,
+    service_name: Annotated[str, typer.Argument(..., help="The name of the service to describe")],
+    action: Annotated[str, typer.Argument(..., help="Service state to change")],
+):
+    service = Service.objects.get(service_name)
+    service.alter_status(action)
+    typer.echo(f"Service {service_name} is now {action}")

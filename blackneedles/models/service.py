@@ -53,6 +53,18 @@ class Service(BaseModel):
         )
         return json.loads(result[0].CHECK_STATUS)[0]["status"]
 
+    def alter_status(self, status: str) -> None:
+        status = status.upper()
+        valid_status = ["SUSPEND", "RESUME"]
+        if status not in valid_status:
+            raise ValueError(
+                f"Invalid status: {status}. Should be one of {valid_status}"
+            )
+        Database.get_instance().get_rows(
+            "CALL __blackneedles__.alter_service(?, ?)",
+            (self.full_path, status)
+        )
+
     class objects:
         @classmethod
         def get(cls, service_name: str) -> "Service":

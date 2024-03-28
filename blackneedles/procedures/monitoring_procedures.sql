@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS __blackneedles__;
 
 
--- CALL list_sevices('database_name')
+-- CALL __blackneedles__.list_sevices('database_name')
 CREATE OR REPLACE PROCEDURE __blackneedles__.list_services (database_name string)
     RETURNS TABLE ()
     LANGUAGE sql
@@ -15,7 +15,7 @@ END;
 $$
 ;
 
--- CALL check_status('service_name')
+-- CALL __blackneedles__.check_status('service_name')
 CREATE OR REPLACE PROCEDURE __blackneedles__.check_status (service_name varchar)
     RETURNS string
     LANGUAGE sql
@@ -27,7 +27,7 @@ $$
 ;
 
 
--- CALL get_service_spec('service_name')
+-- CALL __blackneedles__.describe_service('service_name')
 CREATE OR REPLACE PROCEDURE __blackneedles__.describe_service (service_name varchar)
     RETURNS TABLE ()
     LANGUAGE sql
@@ -37,6 +37,20 @@ DECLARE
 BEGIN
     res := (DESCRIBE SERVICE identifier(:service_name));
     RETURN TABLE(res);
+END;
+$$
+;
+
+
+-- CALL __blackneedles__.alter_service('service_name', 'suspended')
+CREATE OR REPLACE PROCEDURE __blackneedles__.alter_service (service_name varchar, action varchar)
+    RETURNS string
+    LANGUAGE sql
+    as $$
+BEGIN
+    LET alter_service_statement string := 'ALTER SERVICE ' || service_name || ' ' || action || ' ;';
+    EXECUTE IMMEDIATE alter_service_statement;
+    RETURN alter_service_statement;
 END;
 $$
 ;
