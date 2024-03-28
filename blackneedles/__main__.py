@@ -20,7 +20,7 @@ def install_procedures(
     grant: Annotated[Optional[str], typer.Option(help="Grant permissions to the procedures")] = None,
 ):
     print(f"Granting permissions: {grant}")
-    print(f"Not implemented yet... sorry!")
+    print("Not implemented yet... sorry!")
     raise Exception(":(")
 
 

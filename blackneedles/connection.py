@@ -1,13 +1,10 @@
 import configparser
 import os
-from typing import Any, Iterator, Optional, Sequence, Type
+from typing import Any, Iterator, Sequence, Type
 
 from pydantic import BaseModel
 from snowflake.snowpark.row import Row
 from snowflake.snowpark import Session
-from snowflake.snowpark.exceptions import (
-    SnowparkSessionException,
-)
 from threading import local
 
 threadlocal_data = local()
