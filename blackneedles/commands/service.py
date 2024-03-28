@@ -14,16 +14,16 @@ def list_all_services(
         str, typer.Option(help="The schema to list services from")
     ] = None,
     compute_pool: Annotated[
-        str, typer.Option(
-            "--compute-pool",
-            help="The compute pool to list services from"
-        )
+        str,
+        typer.Option("--compute-pool", help="The compute pool to list services from"),
     ] = None,
 ):
-    services = Service.objects.from_namespace({
-        "schema_name": schema,
-        "compute_pool": compute_pool,
-    })
+    services = Service.objects.from_namespace(
+        {
+            "schema_name": schema,
+            "compute_pool": compute_pool,
+        }
+    )
     services = list(services)
 
     print_table(
@@ -39,23 +39,16 @@ def list_all_services(
             lambda s: str(s.max_instances),
             "status",
         ],
-        [
-            "ID",
-            "Name",
-            "Schema",
-            "Owner",
-            "Compute pool",
-            "Min",
-            "Max",
-            "Status"
-        ],
+        ["ID", "Name", "Schema", "Owner", "Compute pool", "Min", "Max", "Status"],
     )
 
 
 @app.command("describe")
 def describe_service(
     ctx: typer.Context,
-    service_names: Annotated[list[str], typer.Argument(..., help="The name of the service to describe")],
+    service_names: Annotated[
+        list[str], typer.Argument(..., help="The name of the service to describe")
+    ],
 ):
     services = [Service.objects.get(name) for name in service_names]
     print_table(
@@ -69,8 +62,7 @@ def describe_service(
         ],
         [
             "ID",
-            "Compute pool"
-            "Status",
+            "Compute pool" "Status",
             "spec",
         ],
     )
@@ -79,7 +71,9 @@ def describe_service(
 @app.command("alter")
 def alter_status(
     ctx: typer.Context,
-    service_name: Annotated[str, typer.Argument(..., help="The name of the service to describe")],
+    service_name: Annotated[
+        str, typer.Argument(..., help="The name of the service to describe")
+    ],
     action: Annotated[str, typer.Argument(..., help="Service state to change")],
 ):
     service = Service.objects.get(service_name)
