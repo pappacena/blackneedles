@@ -1,5 +1,4 @@
-from re import A
-from typing import Annotated, Any
+from typing import Annotated
 import typer
 
 from blackneedles.console import print_table
@@ -51,3 +50,29 @@ def list_all_services(
             "Status"
         ],
     )
+
+
+@app.command("describe")
+def describe_service(
+    ctx: typer.Context,
+    service_names: Annotated[list[str], typer.Argument(..., help="The name of the service to describe")],
+):
+    services = [Service.objects.get(name) for name in service_names]
+
+    print_table(
+        ctx,
+        services,
+        [
+            "full_path",
+            "compute_pool",
+            "status",
+            "spec",
+        ],
+        [
+            "ID",
+            "Compute pool"
+            "Status",
+            "spec",
+        ],
+    )
+

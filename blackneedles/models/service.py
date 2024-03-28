@@ -1,7 +1,6 @@
 import datetime
-from functools import cached_property, lru_cache
+from functools import cached_property
 import json
-from re import I
 from typing import Any, Callable, Iterable
 from pydantic import BaseModel
 
@@ -25,6 +24,7 @@ class Service(BaseModel):
     owner_role_type: str | None
     query_warehouse: str | None
     is_job: bool = False
+    spec: str | None = None
 
     class Config:
         frozen = True
@@ -33,19 +33,38 @@ class Service(BaseModel):
     def full_name(self):
         return f"{self.schema_name}.{self.name}"
 
+    @full_name.setter
+    def full_name(self, value: str):
+        self.schema_name, self.name = value.split(".")
+
     @property
     def full_path(self):
         return f"{self.database_name}.{self.schema_name}.{self.name}"
 
+    @full_path.setter
+    def full_path(self, value: str):
+        self.database_name, self.schema_name, self.name = value.split(".")
+
     @cached_property
     def status(self) -> str:
         result = Database.get_instance().get_rows(
-            "SELECT SYSTEM$GET_SERVICE_STATUS(?) as STATUS",
+            "CALL __blackneedles__.check_statuS(?)",
             (self.full_path,)
         )
-        return json.loads(result[0].STATUS)[0]["status"]
+        return json.loads(result[0].CHECK_STATUS)[0]["status"]
 
     class objects:
+        @classmethod
+        def get(cls, service_name: str) -> "Service":
+            db = Database.get_instance()
+            return next(
+                db.query(
+                    Service,
+                    "CALL __blackneedles__.describe_service(?);",
+                    (service_name, )
+                )
+            )
+
         @classmethod
         def from_namespace(
             cls,
