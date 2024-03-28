@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 import typer
 
 from blackneedles.commands import service
@@ -12,6 +12,16 @@ class GlobalParams:
 
 app = typer.Typer()
 app.add_typer(service.app, name="service")
+
+
+@app.command("install")
+def install_procedures(
+    ctx: typer.Context,
+    grant: Annotated[Optional[str], typer.Option(help="Grant permissions to the procedures")] = None,
+):
+    print(f"Granting permissions: {grant}")
+    print(f"Not implemented yet... sorry!")
+    raise Exception(":(")
 
 
 @app.callback()
