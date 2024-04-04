@@ -13,6 +13,7 @@ from blackneedles.connection import Database
         "SNOWFLAKE_WAREHOUSE": "warehousename",
         "SNOWFLAKE_DATABASE": "dbname",
         "SNOWFLAKE_SCHEMA": "schemaname",
+        "SNOWFLAKE_ROLE": "rolename",
     },
 )
 def test_connection_building(session_cls):
@@ -24,4 +25,5 @@ def test_connection_building(session_cls):
         "warehouse": "warehousename",
         "database": "dbname",
         "schema": "schemaname",
+        "role": "rolename",
     }
