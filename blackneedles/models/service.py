@@ -1,7 +1,7 @@
 import datetime
 from functools import cached_property
 import json
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Iterable, Optional
 from pydantic import BaseModel
 
 from blackneedles.connection import Database
@@ -13,18 +13,18 @@ class Service(BaseModel):
     schema_name: str
     owner: str
     compute_pool: str
-    dns_name: str | None
+    dns_name: Optional[str]
     min_instances: int
     max_instances: int
     auto_resume: bool
     created_on: datetime.datetime
-    updated_on: datetime.datetime | None
-    resumed_on: datetime.datetime | None
-    comment: str | None
-    owner_role_type: str | None
-    query_warehouse: str | None
+    updated_on: Optional[datetime.datetime]
+    resumed_on: Optional[datetime.datetime]
+    comment: Optional[str]
+    owner_role_type: Optional[str]
+    query_warehouse: Optional[str]
     is_job: bool = False
-    spec: str | None = None
+    spec: Optional[str] = None
 
     class Config:
         frozen = True
@@ -47,11 +47,11 @@ class Service(BaseModel):
 
     @cached_property
     def status(self) -> str:
-        result = next(
+        result = list(
             Database.get_instance().get_rows(
                 "CALL __blackneedles__.check_statuS(?)", (self.full_path,)
             )
-        )
+        )[0]
         return json.loads(result.CHECK_STATUS)[0]["status"]
 
     def alter_status(self, status: str) -> None:
@@ -69,13 +69,13 @@ class Service(BaseModel):
         @classmethod
         def get(cls, service_name: str) -> "Service":
             db = Database.get_instance()
-            return next(
+            return list(
                 db.query(
                     Service,
                     "CALL __blackneedles__.describe_service(?);",
                     (service_name,),
                 )
-            )
+            )[0]
 
         @classmethod
         def from_namespace(

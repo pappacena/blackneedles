@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List, Optional
 import typer
 
 from blackneedles.console import print_table
@@ -11,10 +11,10 @@ app = typer.Typer()
 def list_all_services(
     ctx: typer.Context,
     schema: Annotated[
-        str | None, typer.Option(help="The schema to list services from")
+        Optional[str], typer.Option(help="The schema to list services from")
     ] = None,
     compute_pool: Annotated[
-        str | None,
+        Optional[str],
         typer.Option("--compute-pool", help="The compute pool to list services from"),
     ] = None,
 ):
@@ -47,7 +47,7 @@ def list_all_services(
 def describe_service(
     ctx: typer.Context,
     service_names: Annotated[
-        list[str], typer.Argument(..., help="The name of the service to describe")
+        List[str], typer.Argument(..., help="The name of the service to describe")
     ],
 ):
     services = [Service.objects.get(name) for name in service_names]
