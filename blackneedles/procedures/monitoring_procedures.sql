@@ -54,3 +54,18 @@ BEGIN
 END;
 $$
 ;
+
+
+-- CALL __blackneedles__.list_compute_pool(database_name)
+CREATE OR REPLACE PROCEDURE __blackneedles__.list_compute_pool ()
+    RETURNS TABLE ()
+    LANGUAGE sql
+    as $$
+DECLARE
+    res RESULTSET;
+BEGIN
+    res := (SHOW COMPUTE POOLS);
+    RETURN TABLE(res);
+END;
+$$
+;

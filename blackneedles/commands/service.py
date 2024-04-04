@@ -4,7 +4,7 @@ import typer
 from blackneedles.console import print_table
 from blackneedles.models.service import Service
 
-app = typer.Typer()
+app = typer.Typer(short_help="Manage services in Snowpark Container Services.")
 
 
 @app.command("list")
@@ -18,6 +18,7 @@ def list_all_services(
         typer.Option("--compute-pool", help="The compute pool to list services from"),
     ] = None,
 ):
+    """Gives the list of services and its current status"""
     services = Service.objects.from_namespace(
         {
             "schema_name": schema,
@@ -50,6 +51,7 @@ def describe_service(
         List[str], typer.Argument(..., help="The name of the service to describe")
     ],
 ):
+    """Describe a given service name."""
     services = [Service.objects.get(name) for name in service_names]
     print_table(
         ctx,
@@ -74,8 +76,11 @@ def alter_status(
     service_name: Annotated[
         str, typer.Argument(..., help="The name of the service to describe")
     ],
-    action: Annotated[str, typer.Argument(..., help="Service state to change")],
+    action: Annotated[
+        str, typer.Argument(..., help="Service state to change [SUSPEND, RESUME]")
+    ],
 ):
+    """Changes the status of a given service."""
     service = Service.objects.get(service_name)
     service.alter_status(action)
     typer.echo(f"Service {service_name} is now {action}")

@@ -29,6 +29,7 @@ class Database:
             or config["connections"].get("dbname"),
             schema=os.getenv("SNOWFLAKE_SCHEMA")
             or config["connections"].get("schemaname"),
+            role=os.getenv("SNOWFLAKE_ROLE") or config["connections"].get("rolename"),
         )
         session_builder = Session.builder.config("connection_name", "default")
         session_builder.configs(self.config)
