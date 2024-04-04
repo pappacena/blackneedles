@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import os
 from typing import Annotated, Literal, Optional
 import typer
-import sqlparse
+import sqlparse  # type: ignore
 
 from blackneedles.commands import service
 from blackneedles.connection import Database
