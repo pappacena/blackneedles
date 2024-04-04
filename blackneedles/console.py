@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, List, Optional, Union
 import typer
 
 from rich.console import Console
@@ -11,9 +11,9 @@ from blackneedles.connection import AnyModel
 def print_table(
     ctx: typer.Context,
     data: List[AnyModel],
-    attributes: List[str | Callable[[AnyModel], str]],
+    attributes: List[Union[str, Callable[[AnyModel], str], str]],
     headers: List[str],
-    title: str | None = None,
+    title: Optional[str] = None,
 ) -> None:
     with Progress() as progress:
         if ctx.obj.table_style == "rich":
