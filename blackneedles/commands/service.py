@@ -5,6 +5,7 @@ import typer
 
 from blackneedles.console import print_table
 from blackneedles.models.service import Service
+from utils.logs import replace_repeated_lines
 
 app = typer.Typer(short_help="Manage services in Snowpark Container Services.")
 
@@ -94,16 +95,25 @@ def get_service_logs(
 
     If -f is passed, it will follow the logs.
     """
+
+    def get_log_lines():
+        return service.get_logs(instance_id, container_name).split("\n")
+
+    def print_lines(lines):
+        if not lines:
+            return
+        print("\n".join(lines), end="")
+
     service = Service.objects.get(service_name)
-    log = service.get_logs(instance_id, container_name)
+    log = get_log_lines()
+    print_lines(log)
     if not follow:
-        print(log)
         sys.exit(0)
     while True:
-        if log:
-            print(log)
         sleep(0.5)
-        log = service.get_logs(instance_id, container_name).replace(log, "")
+        old_log = log
+        log = get_log_lines()
+        print_lines(replace_repeated_lines(log, old_log))
 
 
 @app.command("alter")
