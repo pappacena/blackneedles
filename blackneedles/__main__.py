@@ -4,7 +4,7 @@ from typing import Annotated, Literal, Optional
 import typer
 import sqlparse  # type: ignore
 
-from blackneedles.commands import service
+from blackneedles.commands import compute_pool, service
 from blackneedles.connection import Database
 
 
@@ -15,6 +15,7 @@ class GlobalParams:
 
 app = typer.Typer()
 app.add_typer(service.app, name="service")
+app.add_typer(compute_pool.app, name="compute-pool")
 
 
 @app.command("install")
