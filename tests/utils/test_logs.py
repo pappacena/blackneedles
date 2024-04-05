@@ -1,4 +1,4 @@
-from utils.logs import replace_repeated_lines
+from blackneedles.utils.logs import replace_repeated_lines
 
 
 def test_replace_log_lines():

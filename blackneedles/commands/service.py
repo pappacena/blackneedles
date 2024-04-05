@@ -5,7 +5,7 @@ import typer
 
 from blackneedles.console import print_table
 from blackneedles.models.service import Service
-from utils.logs import replace_repeated_lines
+from blackneedles.utils.logs import replace_repeated_lines
 
 app = typer.Typer(short_help="Manage services in Snowpark Container Services.")
 
