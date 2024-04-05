@@ -55,17 +55,13 @@ END;
 $$
 ;
 
-
--- CALL __blackneedles__.list_compute_pool(database_name)
-CREATE OR REPLACE PROCEDURE __blackneedles__.list_compute_pool ()
-    RETURNS TABLE ()
+-- CALL __blackneedles__.get_service_logs('service_name', 'container_name'))
+CREATE OR REPLACE PROCEDURE __blackneedles__.get_service_logs (service_name varchar, service_instance varchar, container_name varchar)
+    RETURNS string
     LANGUAGE sql
     as $$
-DECLARE
-    res RESULTSET;
 BEGIN
-    res := (SHOW COMPUTE POOLS);
-    RETURN TABLE(res);
+    RETURN (SELECT SYSTEM$GET_SERVICE_LOGS(:service_name, :service_instance, :container_name) AS log);
 END;
 $$
 ;

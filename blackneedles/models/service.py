@@ -65,6 +65,14 @@ class Service(BaseModel):
             "CALL __blackneedles__.alter_service(?, ?)", (self.full_path, status)
         )
 
+    def get_logs(self, instance_id, container_name: str) -> str:
+        return list(
+            Database.get_instance().get_rows(
+                "CALL __blackneedles__.get_service_logs(?, ?, ?)",
+                (self.full_path, instance_id, container_name),
+            )
+        )[0]["GET_SERVICE_LOGS"]
+
     class objects:
         @classmethod
         def get(cls, service_name: str) -> "Service":

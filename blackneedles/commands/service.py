@@ -1,3 +1,5 @@
+import sys
+from time import sleep
 from typing import Annotated, List, Optional
 import typer
 
@@ -68,6 +70,40 @@ def describe_service(
             "spec",
         ],
     )
+
+
+@app.command("logs")
+def get_service_logs(
+    ctx: typer.Context,
+    service_name: Annotated[
+        str, typer.Argument(..., help="The name of the service to describe")
+    ],
+    instance_id: Annotated[
+        str,
+        typer.Argument(
+            ..., help="The service instance id to get logs from. If unsure, try '0'"
+        ),
+    ],
+    container_name: Annotated[
+        str, typer.Argument(..., help="The name of the container in the service")
+    ],
+    follow: Annotated[bool, typer.Option("-f")] = False,
+):
+    """
+    Shows logs from the given service.
+
+    If -f is passed, it will follow the logs.
+    """
+    service = Service.objects.get(service_name)
+    log = service.get_logs(instance_id, container_name)
+    if not follow:
+        print(log)
+        sys.exit(0)
+    while True:
+        if log:
+            print(log)
+        sleep(0.5)
+        log = service.get_logs(instance_id, container_name).replace(log, "")
 
 
 @app.command("alter")
