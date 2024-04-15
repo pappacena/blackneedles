@@ -2,7 +2,7 @@
 name = "blackneedles"
 version = "0.1.11"
 description = ""
-authors = ["Thiago F Pappacena <pappacena@gmail.com>"]
+authors = ["Thiago F. Pappacena <pappacena@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
