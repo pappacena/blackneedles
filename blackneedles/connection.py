@@ -1,10 +1,12 @@
 import configparser
 import os
-from typing import Any, Iterator, Optional, Sequence, Type, TypeVar
+from typing import Any, Iterator, List, Optional, Sequence, Type, TypeVar
 
 from pydantic import BaseModel
 from snowflake.snowpark.row import Row
 from snowflake.snowpark import Session
+from snowflake.snowpark.exceptions import SnowparkSessionException
+from snowflake.snowpark.context import get_active_session
 from threading import local
 
 threadlocal_data = local()
@@ -14,6 +16,11 @@ AnyModel = TypeVar("AnyModel", bound=BaseModel)
 
 class Database:
     def __init__(self) -> None:
+        try:
+            self.session = get_active_session()
+            return
+        except SnowparkSessionException:
+            pass
         self.config = {}
         config = configparser.ConfigParser()
         config.read(os.path.expanduser("~/.snowsql/config"))
@@ -41,9 +48,7 @@ class Database:
             threadlocal_data.database_instance = Database()
         return threadlocal_data.database_instance
 
-    def get_rows(
-        self, sql: str, params: Optional[Sequence[Any]] = None
-    ) -> Iterator[Row]:
+    def get_rows(self, sql: str, params: Optional[Sequence[Any]] = None) -> List[Row]:
         return self.session.sql(sql, params).collect()
 
     def query(
