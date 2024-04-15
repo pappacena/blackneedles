@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "blackneedles"
-version = "0.1.9"
+version = "0.1.10"
 description = ""
 authors = ["Thiago F Pappacena <pappacena@gmail.com>"]
 readme = "README.md"
