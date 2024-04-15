@@ -15,7 +15,10 @@ AnyModel = TypeVar("AnyModel", bound=BaseModel)
 
 
 class Database:
-    def __init__(self) -> None:
+    def __init__(self, session: Optional[Session] = None) -> None:
+        if session is not None:
+            self.session = session
+            return
         try:
             self.session = get_active_session()
             return
@@ -48,6 +51,10 @@ class Database:
             threadlocal_data.database_instance = Database()
         return threadlocal_data.database_instance
 
+    @classmethod
+    def set_instance(self, instance: "Database") -> None:
+        threadlocal_data.database_instance = instance
+
     def get_rows(self, sql: str, params: Optional[Sequence[Any]] = None) -> List[Row]:
         return self.session.sql(sql, params).collect()
 
@@ -59,3 +66,7 @@ class Database:
     ) -> Iterator[AnyModel]:
         for row in self.session.sql(sql, params).collect():
             yield model.model_validate(row.as_dict())
+
+    def use_database(self, database_name: str) -> None:
+        self.session.use_database(database_name)
+        self.session.use_schema("__blackneedles__")
