@@ -1,6 +1,6 @@
 import configparser
 import os
-from typing import Any, Iterator, Optional, Sequence, Type, TypeVar
+from typing import Any, Iterator, List, Optional, Sequence, Type, TypeVar
 
 from pydantic import BaseModel
 from snowflake.snowpark.row import Row
@@ -48,9 +48,7 @@ class Database:
             threadlocal_data.database_instance = Database()
         return threadlocal_data.database_instance
 
-    def get_rows(
-        self, sql: str, params: Optional[Sequence[Any]] = None
-    ) -> Iterator[Row]:
+    def get_rows(self, sql: str, params: Optional[Sequence[Any]] = None) -> List[Row]:
         return self.session.sql(sql, params).collect()
 
     def query(
