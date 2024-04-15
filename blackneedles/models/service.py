@@ -1,7 +1,7 @@
 import datetime
 from functools import cached_property
 import json
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional
 from pydantic import BaseModel
 
 from blackneedles.connection import Database
@@ -88,7 +88,7 @@ class Service(BaseModel):
         @classmethod
         def from_namespace(
             cls,
-            filters: dict[str, Any],
+            filters: Dict[str, Any],
         ) -> Iterable["Service"]:
             return cls.filter(
                 lambda s: all(
