@@ -58,7 +58,7 @@ class Service(BaseModel):
         """Returns a tuple of instanceId and containerName for all containers in the service."""
         result = list(
             Database.get_instance().get_rows(
-                "CALL __blackneedles__.list_containers(?)", (self.full_path,)
+                "CALL __blackneedles__.check_statuS(?)", (self.full_path,)
             )
         )[0]
         data = json.loads(result.CHECK_STATUS)
