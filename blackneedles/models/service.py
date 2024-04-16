@@ -1,7 +1,7 @@
 import datetime
 from functools import cached_property
 import json
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple
 from pydantic import BaseModel
 
 from blackneedles.connection import Database
@@ -53,6 +53,18 @@ class Service(BaseModel):
             )
         )[0]
         return json.loads(result.CHECK_STATUS)[0]["status"]
+
+    def get_all_containers(self) -> Iterable[Tuple[str, str]]:
+        """Returns a tuple of instanceId and containerName for all containers in the service."""
+        result = list(
+            Database.get_instance().get_rows(
+                "CALL __blackneedles__.list_containers(?)", (self.full_path,)
+            )
+        )[0]
+        data = json.loads(result.CHECK_STATUS)
+        return [
+            (container["instanceId"], container["containerName"]) for container in data
+        ]
 
     def alter_status(self, status: str) -> None:
         status = status.upper()
