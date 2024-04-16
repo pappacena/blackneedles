@@ -85,6 +85,11 @@ class Service(BaseModel):
             )
         )[0]["GET_SERVICE_LOGS"]
 
+    def drop(self) -> None:
+        Database.get_instance().get_rows(
+            "CALL __blackneedles__.drop_service(?)", (self.full_path,)
+        )
+
     class objects:
         @classmethod
         def get(cls, service_name: str) -> "Service":
