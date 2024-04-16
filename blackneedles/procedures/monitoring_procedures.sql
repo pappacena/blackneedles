@@ -65,3 +65,17 @@ BEGIN
 END;
 $$
 ;
+
+
+-- CALL __blackneedles__.drop_service('service_name')
+CREATE OR REPLACE PROCEDURE __blackneedles__.drop_service (service_name varchar)
+    RETURNS string
+    LANGUAGE sql
+    as $$
+BEGIN
+    LET drop_service_statement string := 'DROP SERVICE ' || service_name || ' ;';
+    EXECUTE IMMEDIATE drop_service_statement;
+    RETURN drop_service_statement;
+END;
+$$
+;
